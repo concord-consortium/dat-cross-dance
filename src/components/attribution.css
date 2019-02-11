@@ -1,0 +1,64 @@
+.attribution{
+  min-height: 600px;
+  bottom: 0px;
+  top: 0;
+  left: 0px;
+  position: absolute;
+}
+
+.attribution .attribution-logo{
+  background: url('../assets/cclogo.png');
+  background-size: 130px 55px;
+  background-repeat: no-repeat;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width:130px;
+  height:55px;
+}
+
+.attribution-container-hidden{
+  width:0px;
+  height:0px;
+}
+
+.attribution-container-hidden div{
+  display: none;
+}
+
+.attribution-container{
+  position: fixed;
+  background: rgba(0,0,0,0.4);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transition: background 0.5s;
+  transition-timing-function: ease;
+  z-index: 2
+}
+
+.attribution-text{
+  position: absolute;
+  font-size: 14px;
+  top: 50%;
+  left: 50%;
+  margin: -200px 0 0 -150px;
+  padding:20px;
+  border-radius:12px;
+  border: 1px solid silver;
+  background: white;
+  width:400px;
+  height:300px;
+}
+
+.attribution-text div{
+  margin:10px;
+}
+
+.attribution-text .small-logo{
+  background: url('../assets/cclogo.png');
+  background-size: 100px 42px;
+  width:100px;
+  height:42px;
+}

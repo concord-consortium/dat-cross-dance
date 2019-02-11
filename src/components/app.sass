@@ -1,0 +1,82 @@
+@import vars
+
+#app
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  width: 100%
+  max-width: 1600px
+  height: 100%
+  display: flex
+  align-items: flex
+  justify-content: center
+  background-color: $color-white
+
+.app-container
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
+
+  .top-bar
+    width: 100%
+    height: $top-bar-height
+    margin-bottom: $component-margin
+    flex-shrink: 0
+
+  .controls-and-content-container
+    display: flex
+    width: 100%
+    height: 100%
+    overflow: hidden
+
+    .main-content
+      display: grid
+      grid-template-columns: 55% 45%
+      color: $main-content-color
+      background-color: $color-white
+      width: 100%
+      height: 100%
+
+      .section
+        color: $color-nav-cinder-dark3
+        background-color: $color-white
+        border: $component-border-width solid white
+        border-radius: $component-border-radius
+        margin: 0
+        border-radius: 0
+
+        &.simulation
+          display: flex
+          flex-direction: column
+
+          .subsection
+            display: flex
+            flex-grow: 1
+            &.simulation
+              position: relative
+              flex-grow: 2
+            &.sim-controls
+              z-index: 1
+
+        &.chart-table
+          display: grid
+          grid-template-rows: 270px auto
+          flex: 1 1 auto
+
+          .subsection
+            overflow: hidden
+            &.table
+              border-left: 2px solid $color-nav-cinder-light3
+              border-top: 4px solid $color-nav-cinder-light2
+              border-top-left-radius: 10px
+              margin-top: -6px
+              z-index: 0
+              overflow-y: auto
+            &.chart
+              position: relative
+              border-left: 2px solid $color-nav-cinder-light3
+              overflow-y: auto
+              padding-bottom: 16px

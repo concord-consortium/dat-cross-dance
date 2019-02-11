@@ -1,0 +1,60 @@
+@import ../vars
+
+.chart-panel
+  height: 290px
+  .chart-content-container
+    height: 100%
+
+.chart-container
+  position: relative
+  background-color: white
+  display: block
+  max-height: 350px
+  height: 100%
+
+  .line-chart-container
+    display: flex
+    flex-direction: column
+    height: 100%
+    width: 100%
+
+
+.chart-options
+  position: absolute
+  top: 0px
+  right: 0px
+  z-index: 1
+
+  .chart-display-style
+    border-radius: 2px
+    border: 1px solid $color-nav-cinder-light3
+    float: left
+    text-align: center
+    background: $color-white
+    opacity: 0.7
+    padding: 2px
+    &:hover
+      border: 1px solid $color-nav-cinder-light1
+      background: $color-nav-cinder-light2
+      opacity: 1
+    &.selected
+      border: 1px solid $color-nav-cinder-light1
+      opacity: 1
+
+    input[type="radio"]
+      display: none
+
+    label
+      padding: 2px
+      padding-left: 3px
+
+  .label-display-style
+    background-size: contain
+    background-repeat: no-repeat
+    width: 16px
+    height: 16px
+    display: inline-block
+    &.bar
+      background-image: url("../../assets/buttons/bar-chart.png")
+    &.line
+      background-image: url("../../assets/buttons/line-chart.png")
