@@ -1,50 +1,4 @@
-# Starter Projects
-
-## Development
-
-### Copying a starter project
-
-1. Create a new public repository for your project (e.g. `new-repository`)
-2. Create a clone of the starter repo
-    ```
-    git clone --single-branch https://github.com/concord-consortium/dat-cross-dance.git new-repository
-    ```
-3. Update the starter repo
-
-    First, update and run the starter project:
-    ```
-    cd new-repository
-    npm install
-    npm update
-    npm start
-    ```
-    Then, verify the project works by visiting [localhost:8080](http://localhost:8080) and checking for the words "Hello World".
-    Also verify that the test suite still passes:
-    ```
-    npm run test:full
-    ```
-    If the updates are functional, please commit any changes to `package.json` or `package-lock.json` back to the
-    Starter Projects repository for future use.
-
-4. Next, re-initialize the repo to create a new history
-    ```
-    rm -rf .git
-    git init
-    ```
-5. Create an initial commit for your new project
-    ```
-    git add .
-    git commit -m "Initial commit"
-    ```
-6. Push to your new repository
-    ```
-    git remote add origin https://github.com/concord-consortium/new-repository.git
-    git push -u origin master
-    ```
-7. Open your new repository and update all instances of `dat-cross-dance` to `new-repository` and `Starter Projects` to `New Repository`.
-   Note: this will do some of the configuration for Travis deployment to S3, but you'll still need to follow
-   the instructions [here](https://docs.google.com/document/d/e/2PACX-1vTpYjbGmUMxk_FswUmapK_RzVyEtm1WdnFcNByp9mqwHnp0nR_EzRUOiubuUCsGwzQgOnut_UiabYOM/pub).
-8. Your new repository is ready! Remove this section of the `README`, and follow the steps below to use it.
+# DAT-Cross Dance
 
 ### Initial steps
 
@@ -62,19 +16,19 @@ You *do not* need to build to deploy the code, that is automatic.  See more info
 1. Make sure if you are using Visual Studio Code that you use the workspace version of TypeScript.
    To ensure that you are open a TypeScript file in VSC and then click on the version number next to
    `TypeScript React` in the status bar and select 'Use Workspace Version' in the popup menu.
+2. Data prepared from supplied xlsx spreadsheet, saved as csv
+   then [converted to JSON](http://www.convertcsv.com/csv-to-json.htm)
 
 ## Deployment
-
-*TODO* Set up Travis Deployment
 
 Production releases to S3 are based on the contents of the /dist folder and are built automatically by Travis
 for each branch pushed to GitHub and each merge into production.
 
-Merges into production are deployed to http://dat-cross-dance.concord.org.
+Merges into production are deployed to https://dat-dross-dance.concord.org.
 
-Other branches are deployed to http://dat-cross-dance.concord.org/branch/<name>.
+Other branches are deployed to https://dat-dross-dance.concord.org/branch/<name>.
 
-You can view the status of all the branch deploys [here](https://travis-ci.org/concord-consortium/dat-cross-dance/branches).
+You can view the status of all the builds [here](https://travis-ci.com/concord-consortium/dat-dross-dance/builds).
 
 To deploy a production release:
 
@@ -94,26 +48,9 @@ To deploy a production release:
 
 Run `npm test` to run jest tests. Run `npm run test:full` to run jest and Cypress tests.
 
-##### Cypress Run Options
-
-Inside of your `package.json` file:
-1. `--browser browser-name`: define browser for running tests
-2. `--group group-name`: assign a group name for tests running
-3. `--spec`: define the spec files to run
-4. `--headed`: show cypress test runner GUI while running test (will exit by default when done)
-5. `--no-exit`: keep cypress test runner GUI open when done running
-6. `--record`: decide whether or not tests will have video recordings
-7. `--key`: specify your secret record key
-8. `--reporter`: specify a mocha reporter
-
-##### Cypress Run Examples
-
-1. `cypress run --browser chrome` will run cypress in a chrome browser
-2. `cypress run --headed --no-exit` will open cypress test runner when tests begin to run, and it will remain open when tests are finished running.
-3. `cypress run --spec 'cypress/integration/examples/smoke-test.js'` will point to a smoke-test file rather than running all of the test files for a project.
-
 ## License
 
-Starter Projects are Copyright 2018 (c) by the Concord Consortium and is distributed under the [MIT license](http://www.opensource.org/licenses/MIT).
+DAT Cross Dance created by the Concord Consortium in collaboration with Indiana University and the Educational Testing Service. Copyright 2018 (c) by the Concord Consortium and is distributed under the [MIT license](http://www.opensource.org/licenses/MIT).
 
 See license.md for the complete license text.
+
