@@ -97,7 +97,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       const danceComplete = nextTime / TIMER_DURATION;
       const currentEnergy = START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
       this.setState({ currentEnergyCarb: currentEnergy});
-      console.log(nextTime, danceComplete, currentEnergy);
+      // console.log(nextTime, danceComplete, currentEnergy);
       if (nextTime === TIMER_DURATION) clearInterval(DANCE_CARB_INTERVAL);
     }, 1000);
   }
@@ -109,7 +109,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       const danceComplete = nextTime / TIMER_DURATION;
       const currentEnergy = START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * END_PROTEIN_ENERGY_PERCENT * danceComplete);
       this.setState({ currentEnergyProtein: currentEnergy});
-      console.log(nextTime, danceComplete, currentEnergy);
+      // console.log(nextTime, danceComplete, currentEnergy);
       if (nextTime >= TIMER_DURATION) clearInterval(DANCE_PROTEIN_INTERVAL);
     }, 1000);
   }
