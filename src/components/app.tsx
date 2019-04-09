@@ -9,17 +9,46 @@ import "./app.sass";
 import { DanceSimulation } from "./dance-simulation";
 import { EnergyDiagram } from "./energy-diagram";
 
+let DANCE_PROTEIN_INTERVAL: any;
+let DANCE_CARB_INTERVAL: any;
+
+const START_PROTEIN_ENERGY = 250;
+const START_CARB_ENERGY = 300;
+const END_PROTEIN_ENERGY_PERCENT = 0.5;
+const END_CARB_ENERGY_PERCENT = 0.75;
+const TIMER_DURATION = 15;
+
 interface ISize {     // Used by SizeMe to pass the resized parent details
   size: {             // to its children.
     width?: number;
     height?: number;
   };
 }
+interface IProps { }
+interface IState {
+  currentTime: number;
+  currentEnergyProtein: number;
+  currentEnergyCarb: number;
+}
+
 @inject("stores")
 @observer
-export class AppComponent extends BaseComponent<{}, {}> {
+export class AppComponent extends BaseComponent<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      currentTime: 0,
+      currentEnergyProtein: START_PROTEIN_ENERGY,
+      currentEnergyCarb: START_CARB_ENERGY
+    };
+  }
+  public componentDidMount() {
+    // this.runCarbSimulation();
+    // this.runProteinSimulation();
+  }
 
   public render() {
+    const { currentTime, currentEnergyCarb, currentEnergyProtein } = this.state;
     const { ui, appMode } = this.stores;
     return (
       <div className="app-container">
@@ -30,9 +59,19 @@ export class AppComponent extends BaseComponent<{}, {}> {
               <Attribution />
             </div>
             <div className="section chart-table">
-              <div className="subsection table">
-                <EnergyDiagram />
-                <EnergyDiagram />
+              <div className="subsection diagram">
+                <div className="energy-diagram carb">
+                  <div>Protein-rich Meal</div>
+                  <EnergyDiagram energyInput={300} currentEnergy={currentEnergyCarb} />
+                  <br/>
+                  <input type="button" onClick={this.runCarbSimulation} value="Dance!" />
+                </div>
+                <div className="energy-diagram protein">
+                  <div>Carb-rich Meal</div>
+                  <EnergyDiagram energyInput={250} currentEnergy={currentEnergyProtein} />
+                  <br/>
+                  <input type="button" onClick={this.runProteinSimulation} value="Dance!" />
+                </div>
               </div>
               <div className="subsection chart">
                 <SizeMe monitorHeight={true}>
@@ -50,4 +89,29 @@ export class AppComponent extends BaseComponent<{}, {}> {
       </div>
     );
   }
+
+  private runCarbSimulation = () => {
+    let nextTime = 0;
+    DANCE_CARB_INTERVAL = setInterval(() => {
+      nextTime++;
+      const danceComplete = nextTime / TIMER_DURATION;
+      const currentEnergy = START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
+      this.setState({ currentEnergyCarb: currentEnergy});
+      console.log(nextTime, danceComplete, currentEnergy);
+      if (nextTime === TIMER_DURATION) clearInterval(DANCE_CARB_INTERVAL);
+    }, 1000);
+  }
+
+  private runProteinSimulation = () => {
+    let nextTime = 0;
+    DANCE_PROTEIN_INTERVAL = setInterval(() => {
+      nextTime++;
+      const danceComplete = nextTime / TIMER_DURATION;
+      const currentEnergy = START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * END_PROTEIN_ENERGY_PERCENT * danceComplete);
+      this.setState({ currentEnergyProtein: currentEnergy});
+      console.log(nextTime, danceComplete, currentEnergy);
+      if (nextTime >= TIMER_DURATION) clearInterval(DANCE_PROTEIN_INTERVAL);
+    }, 1000);
+  }
+
 }

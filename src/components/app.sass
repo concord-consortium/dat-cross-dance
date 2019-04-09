@@ -63,13 +63,19 @@
 
         &.chart-table
           display: grid
-          grid-template-rows: 270px auto
-          flex: 1 1 auto
+          grid-template-rows: 320px auto
 
           .subsection
             overflow: hidden
+            display: flex
+            justify-content: center
+            border-left: 2px solid $color-nav-cinder-light3
+            &.diagram
+              margin-top: 6px
+              padding-bottom: 16px
+              div
+                text-align: center
             &.table
-              border-left: 2px solid $color-nav-cinder-light3
               border-top: 4px solid $color-nav-cinder-light2
               border-top-left-radius: 10px
               margin-top: -6px
@@ -77,6 +83,5 @@
               overflow-y: auto
             &.chart
               position: relative
-              border-left: 2px solid $color-nav-cinder-light3
               overflow-y: auto
               padding-bottom: 16px
