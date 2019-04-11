@@ -16,7 +16,7 @@ const START_PROTEIN_ENERGY = 250;
 const START_CARB_ENERGY = 300;
 const END_PROTEIN_ENERGY_PERCENT = 0.5;
 const END_CARB_ENERGY_PERCENT = 0.75;
-const TIMER_DURATION = 15;
+const TIMER_DURATION = 150;
 
 interface ISize {     // Used by SizeMe to pass the resized parent details
   size: {             // to its children.
@@ -107,16 +107,16 @@ export class AppComponent extends BaseComponent<IProps, IState> {
     if (!runningCarb && !runningProtein) {
       this.setState({runningCarb: true});
       DANCE_CARB_INTERVAL = setInterval(() => {
-        nextTime++;
         const danceComplete = nextTime / TIMER_DURATION;
         const currentEnergy = START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
         this.setState({ currentEnergyCarb: currentEnergy });
         // console.log(nextTime, danceComplete, currentEnergy);
+        nextTime++;
         if (nextTime >= TIMER_DURATION) {
           clearInterval(DANCE_CARB_INTERVAL);
           this.setState({ runningCarb: false });
         }
-      }, 1000);
+      }, 100);
     }
   }
 
@@ -126,17 +126,17 @@ export class AppComponent extends BaseComponent<IProps, IState> {
     if (!runningCarb && !runningProtein) {
       this.setState({runningProtein: true});
       DANCE_PROTEIN_INTERVAL = setInterval(() => {
-        nextTime++;
         const danceComplete = nextTime / TIMER_DURATION;
         const currentEnergy =
           START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * END_PROTEIN_ENERGY_PERCENT * danceComplete);
         this.setState({ currentEnergyProtein: currentEnergy });
         // console.log(nextTime, danceComplete, currentEnergy);
+        nextTime++;
         if (nextTime >= TIMER_DURATION) {
           clearInterval(DANCE_PROTEIN_INTERVAL);
           this.setState({ runningProtein: false });
         }
-      }, 1000);
+      }, 100);
     }
   }
 }
