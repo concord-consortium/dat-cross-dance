@@ -85,3 +85,34 @@
               position: relative
               overflow-y: auto
               padding-bottom: 16px
+.simulation-controls
+  width: 400px
+  display: flex
+  flex-direction: row
+  align-items: center
+  .run-simulation-button
+    margin: 10px 20px
+    display: flex
+    width: 158px
+    height: 65px
+    border-radius: 8px
+    border: 1px solid silver
+    box-shadow: 2px 2px 4px 0px rgba(0,0,0,0.5)
+
+    &:hover
+      background-color: #f0f0f0
+    &:active
+      box-shadow: inset 1px 1px 4px 0px rgba(0,0,0,0.5);
+    .simulation-button-text
+      padding: 10px 0px 10px 10px
+      width: 100px
+    .simulation-button-icon
+      margin: 10px 4px 10px 4px
+      width: 60px
+      background-repeat: no-repeat
+      background-size: contain
+      background-position: center
+      &.carb
+        background-image: url('../assets/carbs-button.png')
+      &.protein
+        background-image: url('../assets/protein-button.png')

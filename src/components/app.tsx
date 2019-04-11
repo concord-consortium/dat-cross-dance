@@ -56,6 +56,16 @@ export class AppComponent extends BaseComponent<IProps, IState> {
           <div className="main-content">
             <div className="section simulation">
               <DanceSimulation />
+              <div className="simulation-controls">
+                <div className="run-simulation-button carb" onClick={this.runCarbSimulation}>
+                  <div className="simulation-button-text">Carb-rich Meal</div>
+                  <div className="simulation-button-icon carb" />
+                  </div>
+                <div className="run-simulation-button protein" onClick={this.runProteinSimulation}>
+                  <div className="simulation-button-text">Protein-rich Meal</div>
+                  <div className="simulation-button-icon protein" />
+                </div>
+              </div>
               <Attribution />
             </div>
             <div className="section chart-table">
@@ -63,14 +73,10 @@ export class AppComponent extends BaseComponent<IProps, IState> {
                 <div className="energy-diagram carb">
                   <div>Protein-rich Meal</div>
                   <EnergyDiagram energyInput={300} currentEnergy={currentEnergyCarb} />
-                  <br/>
-                  <input type="button" onClick={this.runCarbSimulation} value="Dance!" />
                 </div>
                 <div className="energy-diagram protein">
                   <div>Carb-rich Meal</div>
                   <EnergyDiagram energyInput={250} currentEnergy={currentEnergyProtein} />
-                  <br/>
-                  <input type="button" onClick={this.runProteinSimulation} value="Dance!" />
                 </div>
               </div>
               <div className="subsection chart">
