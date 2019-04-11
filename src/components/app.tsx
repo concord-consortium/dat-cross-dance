@@ -29,6 +29,8 @@ interface IState {
   currentTime: number;
   currentEnergyProtein: number;
   currentEnergyCarb: number;
+  runningCarb: boolean;
+  runningProtein: boolean;
 }
 
 @inject("stores")
@@ -39,7 +41,9 @@ export class AppComponent extends BaseComponent<IProps, IState> {
     this.state = {
       currentTime: 0,
       currentEnergyProtein: START_PROTEIN_ENERGY,
-      currentEnergyCarb: START_CARB_ENERGY
+      currentEnergyCarb: START_CARB_ENERGY,
+      runningCarb: false,
+      runningProtein: false
     };
   }
   public componentDidMount() {
@@ -48,14 +52,13 @@ export class AppComponent extends BaseComponent<IProps, IState> {
   }
 
   public render() {
-    const { currentTime, currentEnergyCarb, currentEnergyProtein } = this.state;
-    const { ui, appMode } = this.stores;
+    const { currentEnergyCarb, currentEnergyProtein, runningCarb, runningProtein } = this.state;
     return (
       <div className="app-container">
         <div className="controls-and-content-container">
           <div className="main-content">
             <div className="section simulation">
-              <DanceSimulation />
+              <DanceSimulation dance={runningCarb ? "carb" : runningProtein ? "protein" : ""} />
               <div className="simulation-controls">
                 <div className="run-simulation-button carb" onClick={this.runCarbSimulation}>
                   <div className="simulation-button-text">Carb-rich Meal</div>
@@ -71,12 +74,14 @@ export class AppComponent extends BaseComponent<IProps, IState> {
             <div className="section chart-table">
               <div className="subsection diagram">
                 <div className="energy-diagram carb">
-                  <div>Protein-rich Meal</div>
-                  <EnergyDiagram energyInput={300} currentEnergy={currentEnergyCarb} />
+                  <div>Carb-rich Meal</div>
+                  <EnergyDiagram energyInput={300} currentEnergy={currentEnergyCarb}
+                    running={runningCarb} />
                 </div>
                 <div className="energy-diagram protein">
-                  <div>Carb-rich Meal</div>
-                  <EnergyDiagram energyInput={250} currentEnergy={currentEnergyProtein} />
+                  <div>Protein-rich Meal</div>
+                  <EnergyDiagram energyInput={250} currentEnergy={currentEnergyProtein}
+                    running={runningProtein} />
                 </div>
               </div>
               <div className="subsection chart">
@@ -97,27 +102,41 @@ export class AppComponent extends BaseComponent<IProps, IState> {
   }
 
   private runCarbSimulation = () => {
+    const { runningCarb, runningProtein } = this.state;
     let nextTime = 0;
-    DANCE_CARB_INTERVAL = setInterval(() => {
-      nextTime++;
-      const danceComplete = nextTime / TIMER_DURATION;
-      const currentEnergy = START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
-      this.setState({ currentEnergyCarb: currentEnergy});
-      // console.log(nextTime, danceComplete, currentEnergy);
-      if (nextTime === TIMER_DURATION) clearInterval(DANCE_CARB_INTERVAL);
-    }, 1000);
+    if (!runningCarb && !runningProtein) {
+      this.setState({runningCarb: true});
+      DANCE_CARB_INTERVAL = setInterval(() => {
+        nextTime++;
+        const danceComplete = nextTime / TIMER_DURATION;
+        const currentEnergy = START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
+        this.setState({ currentEnergyCarb: currentEnergy });
+        // console.log(nextTime, danceComplete, currentEnergy);
+        if (nextTime >= TIMER_DURATION) {
+          clearInterval(DANCE_CARB_INTERVAL);
+          this.setState({ runningCarb: false });
+        }
+      }, 1000);
+    }
   }
 
   private runProteinSimulation = () => {
+    const { runningCarb, runningProtein } = this.state;
     let nextTime = 0;
-    DANCE_PROTEIN_INTERVAL = setInterval(() => {
-      nextTime++;
-      const danceComplete = nextTime / TIMER_DURATION;
-      const currentEnergy = START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * END_PROTEIN_ENERGY_PERCENT * danceComplete);
-      this.setState({ currentEnergyProtein: currentEnergy});
-      // console.log(nextTime, danceComplete, currentEnergy);
-      if (nextTime >= TIMER_DURATION) clearInterval(DANCE_PROTEIN_INTERVAL);
-    }, 1000);
+    if (!runningCarb && !runningProtein) {
+      this.setState({runningProtein: true});
+      DANCE_PROTEIN_INTERVAL = setInterval(() => {
+        nextTime++;
+        const danceComplete = nextTime / TIMER_DURATION;
+        const currentEnergy =
+          START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * END_PROTEIN_ENERGY_PERCENT * danceComplete);
+        this.setState({ currentEnergyProtein: currentEnergy });
+        // console.log(nextTime, danceComplete, currentEnergy);
+        if (nextTime >= TIMER_DURATION) {
+          clearInterval(DANCE_PROTEIN_INTERVAL);
+          this.setState({ runningProtein: false });
+        }
+      }, 1000);
+    }
   }
-
 }
