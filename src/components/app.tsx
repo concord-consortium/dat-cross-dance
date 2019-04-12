@@ -95,6 +95,20 @@ export class AppComponent extends BaseComponent<IProps, IState> {
                     running={runningProtein} display={runningProtein || hasRunProteinSimulation}/>
                 </div>
               </div>
+              <div className="energy-diagram-key">
+                <div className="key input">
+                  <div className="key-color" />
+                  <div className="key-text">Energy input</div>
+                </div>
+                <div className="key output">
+                  <div className="key-color" />
+                  <div className="key-text">Energy expended</div>
+                </div>
+                <div className="key hunger">
+                  <div className="key-color" />
+                  <div className="key-text">Hunger</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

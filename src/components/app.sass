@@ -63,7 +63,7 @@
 
         &.chart-table
           display: grid
-          grid-template-rows: 320px auto
+          grid-template-rows: 280px auto
 
           .subsection
             overflow: hidden
@@ -116,3 +116,32 @@
         background-image: url('../assets/carbs-button.png')
       &.protein
         background-image: url('../assets/protein-button.png')
+.energy-diagram-key
+  width: 300px
+  height: 100px
+  font-size: 0.9em
+  margin-left: 20px
+
+  .key
+    clear: both
+    width: 100%
+    padding: 6px
+    .key-text
+      float: left
+      width: 200px
+      margin-left: 10px
+    .key-color
+      float: left
+      width: 18px
+      height: 18px
+      border: 1px solid silver
+
+    &.input
+      .key-color
+        background-color: yellow
+    &.output
+      .key-color
+        background-color: green
+    &.hunger
+      .key-color
+        background-color: orange
