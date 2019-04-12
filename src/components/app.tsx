@@ -27,10 +27,14 @@ interface ISize {     // Used by SizeMe to pass the resized parent details
 interface IProps { }
 interface IState {
   currentTime: number;
+  inputEnergyProtein: number;
+  inputEnergyCarb: number;
   currentEnergyProtein: number;
   currentEnergyCarb: number;
   runningCarb: boolean;
   runningProtein: boolean;
+  hasRunCarbSimulation: boolean;
+  hasRunProteinSimulation: boolean;
 }
 
 @inject("stores")
@@ -40,10 +44,14 @@ export class AppComponent extends BaseComponent<IProps, IState> {
     super(props);
     this.state = {
       currentTime: 0,
-      currentEnergyProtein: START_PROTEIN_ENERGY,
-      currentEnergyCarb: START_CARB_ENERGY,
+      inputEnergyProtein: 0,
+      inputEnergyCarb: 0,
+      currentEnergyProtein: 0,
+      currentEnergyCarb: 0,
       runningCarb: false,
-      runningProtein: false
+      runningProtein: false,
+      hasRunCarbSimulation: false,
+      hasRunProteinSimulation: false
     };
   }
   public componentDidMount() {
@@ -52,7 +60,15 @@ export class AppComponent extends BaseComponent<IProps, IState> {
   }
 
   public render() {
-    const { currentEnergyCarb, currentEnergyProtein, runningCarb, runningProtein } = this.state;
+    const {
+      inputEnergyCarb,
+      inputEnergyProtein,
+      currentEnergyCarb,
+      currentEnergyProtein,
+      runningCarb,
+      runningProtein,
+      hasRunCarbSimulation,
+      hasRunProteinSimulation } = this.state;
     return (
       <div className="app-container">
         <div className="controls-and-content-container">
@@ -75,18 +91,16 @@ export class AppComponent extends BaseComponent<IProps, IState> {
               <div className="subsection diagram">
                 <div className="energy-diagram carb">
                   <div>Carb-rich Meal</div>
-                  <EnergyDiagram energyInput={300} currentEnergy={currentEnergyCarb}
-                    running={runningCarb} />
+                  <EnergyDiagram energyInput={inputEnergyCarb} currentEnergy={currentEnergyCarb}
+                    running={runningCarb} display={runningCarb || hasRunCarbSimulation} />
                 </div>
                 <div className="energy-diagram protein">
                   <div>Protein-rich Meal</div>
-                  <EnergyDiagram energyInput={250} currentEnergy={currentEnergyProtein}
-                    running={runningProtein} />
+                  <EnergyDiagram energyInput={inputEnergyProtein} currentEnergy={currentEnergyProtein}
+                    running={runningProtein} display={runningProtein || hasRunProteinSimulation}/>
                 </div>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>
@@ -95,9 +109,10 @@ export class AppComponent extends BaseComponent<IProps, IState> {
 
   private runCarbSimulation = () => {
     const { runningCarb, runningProtein } = this.state;
-    let nextTime = 0;
     if (!runningCarb && !runningProtein) {
-      this.setState({runningCarb: true});
+      let nextTime = 0;
+      this.setState({runningCarb: true,
+        inputEnergyCarb: START_CARB_ENERGY});
       DANCE_CARB_INTERVAL = setInterval(() => {
         const danceComplete = nextTime / TIMER_DURATION;
         const currentEnergy = START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
@@ -106,17 +121,17 @@ export class AppComponent extends BaseComponent<IProps, IState> {
         nextTime++;
         if (nextTime >= TIMER_DURATION) {
           clearInterval(DANCE_CARB_INTERVAL);
-          this.setState({ runningCarb: false });
+          this.setState({ runningCarb: false, hasRunCarbSimulation: true });
         }
       }, 100);
     }
   }
 
   private runProteinSimulation = () => {
-    const { runningCarb, runningProtein } = this.state;
-    let nextTime = 0;
-    if (!runningCarb && !runningProtein) {
-      this.setState({runningProtein: true});
+    const { runningCarb, runningProtein, hasRunCarbSimulation } = this.state;
+    if (!runningCarb && !runningProtein && hasRunCarbSimulation) {
+      let nextTime = 0;
+      this.setState({runningProtein: true, inputEnergyProtein: START_PROTEIN_ENERGY});
       DANCE_PROTEIN_INTERVAL = setInterval(() => {
         const danceComplete = nextTime / TIMER_DURATION;
         const currentEnergy =
@@ -126,7 +141,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
         nextTime++;
         if (nextTime >= TIMER_DURATION) {
           clearInterval(DANCE_PROTEIN_INTERVAL);
-          this.setState({ runningProtein: false });
+          this.setState({ runningProtein: false, hasRunProteinSimulation: true });
         }
       }, 100);
     }

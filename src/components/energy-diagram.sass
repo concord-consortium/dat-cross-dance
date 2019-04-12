@@ -16,6 +16,8 @@
   position: relative
   border: 8px solid silver
   border-radius: 20px
+  &.inactive
+    opacity: 0.5
 
   .energy-diagram-placeholder
     width: 100%
@@ -29,20 +31,30 @@
       animation-name: pulse
       animation-duration: 1.0s
       animation-iteration-count: 15
+
   .energy-bar-input
-    width: 20px
-    height: 180px
-    background-color: lightgreen
+    width: 16px
+    height: 0px
+    background-color: yellow
     position: absolute
-    left: 10px
+    left: 12px
     bottom: 0px
+    transition: 2s
 
-
-  .energy-bar-output
-    width: 20px
-    height: 80px
+  .energy-bar-hunger
+    width: 16px
+    height: 0px
     background-color: orange
     position: absolute
-    right: 10px
+    right: 28px
+    bottom: 0px
+    transition: 0.1s linear
+
+  .energy-bar-expended
+    width: 16px
+    height: 0px
+    background-color: green
+    position: absolute
+    right: 8px
     bottom: 0px
     transition: 0.1s linear

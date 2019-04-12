@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BaseComponent, IBaseProps } from "./base";
+import * as ReactTooltip from "react-tooltip";
 
 import "./energy-diagram.sass";
 
@@ -10,24 +11,34 @@ interface IProps extends IBaseProps {
   energyInput: number;
   currentEnergy: number;
   running: boolean;
+  display: boolean;
 }
 interface IState {
 }
 
 export class EnergyDiagram extends BaseComponent<IProps, IState> {
-
+  public componentDidUpdate() {
+    ReactTooltip.rebuild();
+  }
   public render() {
-    const { energyInput, currentEnergy, running } = this.props;
+    const { energyInput, currentEnergy, running, display } = this.props;
     const inputHeight = energyInput / MAX_ENERGY * BAR_HEIGHT;
-    const currentHeight = currentEnergy / MAX_ENERGY * BAR_HEIGHT;
+    const heightHunger = currentEnergy / MAX_ENERGY * BAR_HEIGHT;
+    const heightExpendedEnergy = energyInput > 0 ? (1 - currentEnergy / energyInput) * BAR_HEIGHT : 0;
+
     const inputStyle = { height: inputHeight };
-    const currentStyle = { height: currentHeight };
+    const currentStyleHunger = { height: heightHunger };
+    const currentStyleExpended = { height: heightExpendedEnergy };
+
     const placeholderClass = "energy-diagram-placeholder" + (running ? " running" : "");
+    const containerClass = "energy-diagram-container" + (display ? "" : " inactive");
     return (
-      <div className="energy-diagram-container">
-        <div className="energy-bar-input" style={inputStyle} />
-        <div className="energy-bar-output" style={currentStyle} />
+      <div className={containerClass}>
+        <div className="energy-bar-input" data-tip="Calories Consumed" style={inputStyle} />
+        <div className="energy-bar-hunger" data-tip="Hunger" style={currentStyleHunger} />
+        <div className="energy-bar-expended" data-tip="Energy Expended" style={currentStyleExpended} />
         <div className={placeholderClass} />
+        <ReactTooltip delayHide={1000} delayShow={0} />
       </div>
     );
   }
