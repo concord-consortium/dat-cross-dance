@@ -84,14 +84,6 @@ export class AppComponent extends BaseComponent<IProps, IState> {
                     running={runningProtein} />
                 </div>
               </div>
-              <div className="subsection chart">
-                <SizeMe monitorHeight={true}>
-                  {({ size }: ISize) =>
-                    <ChartDisplay parentWidth={size.width ? size.width : 0}
-                      parentHeight={size.height ? size.height : 1} />
-                  }
-                </SizeMe>
-              </div>
 
             </div>
 
