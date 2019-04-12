@@ -23,12 +23,13 @@ export class EnergyDiagram extends BaseComponent<IProps, IState> {
   public render() {
     const { energyInput, currentEnergy, running, display } = this.props;
     const inputHeight = energyInput / MAX_ENERGY * BAR_HEIGHT;
-    const heightHunger = currentEnergy / MAX_ENERGY * BAR_HEIGHT;
+    // TODO: figure out "hunger"
+    // const heightHunger = currentEnergy / MAX_ENERGY * BAR_HEIGHT;
     const heightExpendedEnergy = energyInput > 0 ? (1 - (currentEnergy / energyInput)) * BAR_HEIGHT : 0;
     // console.log(energyInput, currentEnergy, inputHeight, heightHunger, heightExpendedEnergy);
 
     const inputStyle = { height: inputHeight };
-    const currentStyleHunger = { height: heightHunger };
+    const currentStyleHunger = { height: heightExpendedEnergy };
     const currentStyleExpended = { height: heightExpendedEnergy };
 
     const placeholderClass = "energy-diagram-placeholder" + (running ? " running" : "");
@@ -36,8 +37,8 @@ export class EnergyDiagram extends BaseComponent<IProps, IState> {
     return (
       <div className={containerClass}>
         <div className="energy-bar-input" data-tip="Calories Consumed" style={inputStyle} />
-        <div className="energy-bar-hunger" data-tip="Hunger" style={currentStyleHunger} />
-        <div className="energy-bar-expended" data-tip="Energy Expended" style={currentStyleExpended} />
+        <div className="energy-bar-hunger" data-tip="Level of Hunger" style={currentStyleHunger} />
+        <div className="energy-bar-expended" data-tip="Energy Used" style={currentStyleExpended} />
         <div className={placeholderClass} />
         <ReactTooltip delayHide={1000} delayShow={0} />
       </div>
