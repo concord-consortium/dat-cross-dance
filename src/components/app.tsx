@@ -9,8 +9,7 @@ import "./app.sass";
 import { DanceSimulation } from "./dance-simulation";
 import { EnergyDiagram } from "./energy-diagram";
 
-let DANCE_PROTEIN_INTERVAL: any;
-let DANCE_CARB_INTERVAL: any;
+let DANCE_INTERVAL: any;
 
 const START_PROTEIN_ENERGY = 250;
 const START_CARB_ENERGY = 300;
@@ -53,10 +52,6 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       hasRunCarbSimulation: false,
       hasRunProteinSimulation: false
     };
-  }
-  public componentDidMount() {
-    // this.runCarbSimulation();
-    // this.runProteinSimulation();
   }
 
   public render() {
@@ -110,40 +105,50 @@ export class AppComponent extends BaseComponent<IProps, IState> {
   private runCarbSimulation = () => {
     const { runningCarb, runningProtein } = this.state;
     if (!runningCarb && !runningProtein) {
-      let nextTime = 0;
-      this.setState({runningCarb: true,
-        inputEnergyCarb: START_CARB_ENERGY, currentEnergyCarb: START_CARB_ENERGY});
-      DANCE_CARB_INTERVAL = setInterval(() => {
-        const danceComplete = nextTime / TIMER_DURATION;
-        const currentEnergy = START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
+      this.setState({
+        runningCarb: true,
+        inputEnergyCarb: START_CARB_ENERGY,
+        currentEnergyCarb: START_CARB_ENERGY
+      });
+      this.runSimulation((danceComplete: number) => {
+        const currentEnergy =
+        START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
         this.setState({ currentEnergyCarb: currentEnergy });
-        // console.log(nextTime, danceComplete, currentEnergy);
-        nextTime++;
-        if (nextTime >= TIMER_DURATION) {
-          clearInterval(DANCE_CARB_INTERVAL);
-          this.setState({ runningCarb: false, hasRunCarbSimulation: true });
-        }
-      }, 100);
+      }, () => {
+        this.setState({ runningCarb: false, hasRunCarbSimulation: true });
+      });
     }
   }
 
   private runProteinSimulation = () => {
     const { runningCarb, runningProtein, hasRunCarbSimulation } = this.state;
     if (!runningCarb && !runningProtein && hasRunCarbSimulation) {
-      let nextTime = 0;
-      this.setState({runningProtein: true, inputEnergyProtein: START_PROTEIN_ENERGY});
-      DANCE_PROTEIN_INTERVAL = setInterval(() => {
-        const danceComplete = nextTime / TIMER_DURATION;
+      this.setState({
+        runningProtein: true,
+        inputEnergyProtein: START_PROTEIN_ENERGY,
+        currentEnergyProtein: START_PROTEIN_ENERGY
+      });
+      this.runSimulation((danceComplete: number) => {
         const currentEnergy =
-          START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * END_PROTEIN_ENERGY_PERCENT * danceComplete);
+        START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * END_PROTEIN_ENERGY_PERCENT * danceComplete);
         this.setState({ currentEnergyProtein: currentEnergy });
-        // console.log(nextTime, danceComplete, currentEnergy);
-        nextTime++;
-        if (nextTime >= TIMER_DURATION) {
-          clearInterval(DANCE_PROTEIN_INTERVAL);
-          this.setState({ runningProtein: false, hasRunProteinSimulation: true });
-        }
-      }, 100);
+      }, () => {
+        this.setState({ runningProtein: false, hasRunProteinSimulation: true });
+      });
     }
   }
+
+  private runSimulation = (updateSimulation: any, finishSimulation: any) => {
+    let nextTime = 0;
+    DANCE_INTERVAL = setInterval(() => {
+      const danceComplete = nextTime / TIMER_DURATION;
+      updateSimulation(danceComplete);
+      nextTime++;
+      if (nextTime >= TIMER_DURATION) {
+        clearInterval(DANCE_INTERVAL);
+        finishSimulation();
+      }
+    }, 100);
+  }
+
 }
