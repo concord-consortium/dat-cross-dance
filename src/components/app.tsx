@@ -112,7 +112,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
     if (!runningCarb && !runningProtein) {
       let nextTime = 0;
       this.setState({runningCarb: true,
-        inputEnergyCarb: START_CARB_ENERGY});
+        inputEnergyCarb: START_CARB_ENERGY, currentEnergyCarb: START_CARB_ENERGY});
       DANCE_CARB_INTERVAL = setInterval(() => {
         const danceComplete = nextTime / TIMER_DURATION;
         const currentEnergy = START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
