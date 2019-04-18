@@ -18,7 +18,6 @@ export class DanceSimulation extends BaseComponent<IProps, IState> {
   public componentDidUpdate() {
     const { dance } = this.props;
     if (!this.state.isPlaying && dance && dance.length > 0) {
-      console.log("play");
       const video: HTMLVideoElement = document.getElementsByTagName("video")[0];
       const videoUrl = dance === "carb" ? "../assets/anika-hungry.mp4" :
         dance === "protein" ? "../assets/anika-tired.mp4" : "";
