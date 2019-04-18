@@ -64,6 +64,10 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       runningProtein,
       hasRunCarbSimulation,
       hasRunProteinSimulation } = this.state;
+    const carbButtonClass = "run-simulation-button carb" +
+      (runningCarb ? " running" : runningProtein ? " inactive" : "");
+    const proteinButtonClass = "run-simulation-button protein" +
+      (runningProtein ? " running" : runningCarb ? " inactive" : "");
     return (
       <div className="app-container">
         <div className="controls-and-content-container">
@@ -71,11 +75,11 @@ export class AppComponent extends BaseComponent<IProps, IState> {
             <div className="section simulation">
               <DanceSimulation dance={runningCarb ? "carb" : runningProtein ? "protein" : ""} />
               <div className="simulation-controls">
-                <div className="run-simulation-button carb" onClick={this.runCarbSimulation}>
+                <div className={carbButtonClass} onClick={this.runCarbSimulation}>
                   <div className="simulation-button-text">Carbohydrate-rich Meal</div>
                   <div className="simulation-button-icon carb" />
                   </div>
-                <div className="run-simulation-button protein" onClick={this.runProteinSimulation}>
+                <div className={proteinButtonClass} onClick={this.runProteinSimulation}>
                   <div className="simulation-button-text">Protein-rich Meal</div>
                   <div className="simulation-button-icon protein" />
                 </div>

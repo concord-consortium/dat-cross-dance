@@ -98,11 +98,18 @@
     border-radius: 8px
     border: 1px solid silver
     box-shadow: 2px 2px 4px 0px rgba(0,0,0,0.5)
-
     &:hover
       background-color: #f0f0f0
     &:active
-      box-shadow: inset 1px 1px 4px 0px rgba(0,0,0,0.5);
+      box-shadow: inset 1px 1px 4px 0px rgba(0,0,0,0.5)
+    &.running
+      box-shadow: 0px 0px 0px 8px yellow
+      &:hover
+        background-color: #ffffff
+    &.inactive
+      opacity: 0.6
+      background-color: #f0f0f0
+      box-shadow: none
     .simulation-button-text
       padding: 15px 0px 10px 5px
       width: 120px
