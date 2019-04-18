@@ -19,8 +19,8 @@ export class DanceSimulation extends BaseComponent<IProps, IState> {
     const { dance } = this.props;
     if (!this.state.isPlaying && dance && dance.length > 0) {
       const video: HTMLVideoElement = document.getElementsByTagName("video")[0];
-      const videoUrl = dance === "carb" ? "../assets/anika-hungry.mp4" :
-        dance === "protein" ? "../assets/anika-tired.mp4" : "";
+      const videoUrl = dance === "carb" ? "./assets/anika-hungry.mp4" :
+        dance === "protein" ? "./assets/anika-tired.mp4" : "";
       video.src = videoUrl;
       video.play();
 
@@ -33,12 +33,12 @@ export class DanceSimulation extends BaseComponent<IProps, IState> {
     const { dance } = this.props;
     const simulationPlaceholderClass = "simulation-placeholder " + (dance ? dance : "");
     const isPlaying = dance && dance.length > 0;
-    const videoUrl = dance === "carb" ? "../assets/anika-hungry.mp4" :
-      dance === "protein" ? "../assets/anika-tired.mp4" : "";
+    const videoUrl = dance === "carb" ? "./assets/anika-hungry.mp4" :
+      dance === "protein" ? "./assets/anika-tired.mp4" : "";
     return (
       <div className="simulation-container">
         <div className={simulationPlaceholderClass}>
-          <video id="video1" poster="../assets/dance_placeholder.png"
+          <video id="video1" poster="./assets/dance_placeholder.png"
             loop={false} playsInline={true}>
             <source src={videoUrl} type="video/mp4" />
           </video>
