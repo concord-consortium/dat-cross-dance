@@ -72,7 +72,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
               <DanceSimulation dance={runningCarb ? "carb" : runningProtein ? "protein" : ""} />
               <div className="simulation-controls">
                 <div className="run-simulation-button carb" onClick={this.runCarbSimulation}>
-                  <div className="simulation-button-text">Carb-rich Meal</div>
+                  <div className="simulation-button-text">Carbohydrate-rich Meal</div>
                   <div className="simulation-button-icon carb" />
                   </div>
                 <div className="run-simulation-button protein" onClick={this.runProteinSimulation}>
@@ -85,7 +85,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
             <div className="section chart-table">
               <div className="subsection diagram">
                 <div className="energy-diagram carb">
-                  <div>Carb-rich Meal</div>
+                  <div>Carbohydrate-rich Meal</div>
                   <EnergyDiagram energyInput={inputEnergyCarb} currentEnergy={currentEnergyCarb}
                     running={runningCarb} display={runningCarb || hasRunCarbSimulation} />
                 </div>
