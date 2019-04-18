@@ -2,7 +2,6 @@ import { inject, observer } from "mobx-react";
 import * as React from "react";
 import { SizeMe } from "react-sizeme";
 import { BaseComponent } from "./base";
-import { ChartDisplay } from "./charts/chart-display";
 import Attribution from "./attribution";
 
 import "./app.sass";
@@ -30,6 +29,8 @@ interface IState {
   inputEnergyCarb: number;
   currentEnergyProtein: number;
   currentEnergyCarb: number;
+  currentHungerProtein: number;
+  currentHungerCarb: number;
   runningCarb: boolean;
   runningProtein: boolean;
   hasRunCarbSimulation: boolean;
@@ -47,6 +48,8 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       inputEnergyCarb: 0,
       currentEnergyProtein: 0,
       currentEnergyCarb: 0,
+      currentHungerProtein: 0,
+      currentHungerCarb: 0,
       runningCarb: false,
       runningProtein: false,
       hasRunCarbSimulation: false,
@@ -60,6 +63,8 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       inputEnergyProtein,
       currentEnergyCarb,
       currentEnergyProtein,
+      currentHungerCarb,
+      currentHungerProtein,
       runningCarb,
       runningProtein,
       hasRunCarbSimulation,
@@ -91,12 +96,14 @@ export class AppComponent extends BaseComponent<IProps, IState> {
                 <div className="energy-diagram carb">
                   <div>Carbohydrate-rich Meal</div>
                   <EnergyDiagram energyInput={inputEnergyCarb} currentEnergy={currentEnergyCarb}
-                    running={runningCarb} display={runningCarb || hasRunCarbSimulation} />
+                    running={runningCarb} display={runningCarb || hasRunCarbSimulation}
+                    currentHunger={currentHungerCarb} />
                 </div>
                 <div className="energy-diagram protein">
                   <div>Protein-rich Meal</div>
                   <EnergyDiagram energyInput={inputEnergyProtein} currentEnergy={currentEnergyProtein}
-                    running={runningProtein} display={runningProtein || hasRunProteinSimulation}/>
+                    running={runningProtein} display={runningProtein || hasRunProteinSimulation}
+                    currentHunger={currentHungerProtein} />
                 </div>
               </div>
               <div className="energy-diagram-key">
@@ -122,6 +129,10 @@ export class AppComponent extends BaseComponent<IProps, IState> {
 
   private runCarbSimulation = () => {
     const { runningCarb, runningProtein } = this.state;
+    // carb energy usage like a log curve
+    const energyFunc = (x: number) => (0.6 * Math.log10((10 * x) + 1));
+    const hungerFunc = (x: number) => (1 - Math.cos(x));
+    const timeMax = Math.PI / 2;
     if (!runningCarb && !runningProtein) {
       this.setState({
         runningCarb: true,
@@ -130,8 +141,9 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       });
       this.runSimulation((danceComplete: number) => {
         const currentEnergy =
-        START_CARB_ENERGY - (START_CARB_ENERGY * END_CARB_ENERGY_PERCENT * danceComplete);
-        this.setState({ currentEnergyCarb: currentEnergy });
+          START_CARB_ENERGY - (START_CARB_ENERGY * energyFunc(danceComplete * timeMax));
+        const currentHunger = START_CARB_ENERGY - (START_CARB_ENERGY * hungerFunc(danceComplete * timeMax));
+        this.setState({ currentEnergyCarb: currentEnergy, currentHungerCarb: currentHunger });
       }, () => {
         this.setState({ runningCarb: false, hasRunCarbSimulation: true });
       });
@@ -140,6 +152,10 @@ export class AppComponent extends BaseComponent<IProps, IState> {
 
   private runProteinSimulation = () => {
     const { runningCarb, runningProtein, hasRunCarbSimulation } = this.state;
+    // protein energy use like a sine curve from 0 to pi/2
+    const energyFunc = (x: number) => (Math.sin(x));
+    const hungerFunc = (x: number) => (1 - Math.cos(4 * x / 5));
+    const timeMax = Math.PI / 2;
     if (!runningCarb && !runningProtein && hasRunCarbSimulation) {
       this.setState({
         runningProtein: true,
@@ -148,8 +164,9 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       });
       this.runSimulation((danceComplete: number) => {
         const currentEnergy =
-        START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * END_PROTEIN_ENERGY_PERCENT * danceComplete);
-        this.setState({ currentEnergyProtein: currentEnergy });
+          START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * energyFunc(danceComplete * timeMax));
+        const currentHunger = START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * hungerFunc(danceComplete * timeMax));
+        this.setState({ currentEnergyProtein: currentEnergy, currentHungerProtein: currentHunger });
       }, () => {
         this.setState({ runningProtein: false, hasRunProteinSimulation: true });
       });

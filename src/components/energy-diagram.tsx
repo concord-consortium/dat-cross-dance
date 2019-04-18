@@ -4,12 +4,13 @@ import * as ReactTooltip from "react-tooltip";
 
 import "./energy-diagram.sass";
 
-const BAR_HEIGHT = 200;
+const MAX_BAR_HEIGHT = 200;
 const MAX_ENERGY = 300;
 
 interface IProps extends IBaseProps {
   energyInput: number;
   currentEnergy: number;
+  currentHunger: number;
   running: boolean;
   display: boolean;
 }
@@ -21,15 +22,16 @@ export class EnergyDiagram extends BaseComponent<IProps, IState> {
     ReactTooltip.rebuild();
   }
   public render() {
-    const { energyInput, currentEnergy, running, display } = this.props;
-    const inputHeight = energyInput / MAX_ENERGY * BAR_HEIGHT;
+    const { energyInput, currentEnergy, currentHunger, running, display } = this.props;
+    const inputHeight = energyInput / MAX_ENERGY * MAX_BAR_HEIGHT;
+    const barHeight = inputHeight;
     // TODO: figure out "hunger"
-    // const heightHunger = currentEnergy / MAX_ENERGY * BAR_HEIGHT;
-    const heightExpendedEnergy = energyInput > 0 ? (1 - (currentEnergy / energyInput)) * BAR_HEIGHT : 0;
+    const heightHunger = currentHunger > 0 ?  (1 - (currentHunger / energyInput)) * barHeight : 0;
+    const heightExpendedEnergy = energyInput > 0 ? (1 - (currentEnergy / energyInput)) * barHeight: 0;
     // console.log(energyInput, currentEnergy, inputHeight, heightHunger, heightExpendedEnergy);
 
     const inputStyle = { height: inputHeight };
-    const currentStyleHunger = { height: heightExpendedEnergy };
+    const currentStyleHunger = { height: heightHunger };
     const currentStyleExpended = { height: heightExpendedEnergy };
 
     const placeholderClass = "energy-diagram-placeholder" + (running ? " running" : "");
