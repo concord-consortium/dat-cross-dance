@@ -113,7 +113,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
                 </div>
                 <div className="key output">
                   <div className="key-color" />
-                  <div className="key-text">Energy Used</div>
+                  <div className="key-text">% of Energy Used</div>
                 </div>
                 <div className="key hunger">
                   <div className="key-color" />

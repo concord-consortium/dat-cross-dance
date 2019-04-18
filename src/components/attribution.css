@@ -2,7 +2,7 @@
   min-height: 485px;
   bottom: 0px;
   top: 0;
-  right: 60px;
+  left: 0px;
   position: absolute;
 }
 
@@ -11,8 +11,8 @@
   background-size: 130px 55px;
   background-repeat: no-repeat;
   position: absolute;
-  bottom: 0px;
-  left: 0px;
+  top: 430px;
+  left: 660px;
   width:130px;
   height:55px;
 }
