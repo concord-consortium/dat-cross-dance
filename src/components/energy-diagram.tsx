@@ -11,6 +11,7 @@ interface IProps extends IBaseProps {
   energyInput: number;
   currentEnergy: number;
   currentHunger: number;
+  finalEnergyUsePercent: number;
   running: boolean;
   display: boolean;
 }
@@ -22,12 +23,13 @@ export class EnergyDiagram extends BaseComponent<IProps, IState> {
     ReactTooltip.rebuild();
   }
   public render() {
-    const { energyInput, currentEnergy, currentHunger, running, display } = this.props;
+    const { energyInput, currentEnergy, currentHunger, running, display, finalEnergyUsePercent } = this.props;
     const inputHeight = energyInput / MAX_ENERGY * MAX_BAR_HEIGHT;
+    const maxExpendedEnergyHeight = inputHeight * finalEnergyUsePercent;
     const barHeight = inputHeight;
     // TODO: figure out "hunger"
-    const heightHunger = currentHunger > 0 ?  (1 - (currentHunger / energyInput)) * barHeight : 0;
-    const heightExpendedEnergy = energyInput > 0 ? (1 - (currentEnergy / energyInput)) * barHeight : 0;
+    const heightHunger = currentHunger > 0 ?  (1 - (currentHunger / energyInput)) * maxExpendedEnergyHeight : 0;
+    const heightExpendedEnergy = energyInput > 0 ? (1 - (currentEnergy / energyInput)) * maxExpendedEnergyHeight : 0;
     // console.log(energyInput, currentEnergy, inputHeight, heightHunger, heightExpendedEnergy);
 
     const inputStyle = { height: inputHeight };

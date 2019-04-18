@@ -97,13 +97,13 @@ export class AppComponent extends BaseComponent<IProps, IState> {
                   <div>Carbohydrate-rich Meal</div>
                   <EnergyDiagram energyInput={inputEnergyCarb} currentEnergy={currentEnergyCarb}
                     running={runningCarb} display={runningCarb || hasRunCarbSimulation}
-                    currentHunger={currentHungerCarb} />
+                    currentHunger={currentHungerCarb} finalEnergyUsePercent={END_CARB_ENERGY_PERCENT} />
                 </div>
                 <div className="energy-diagram protein">
                   <div>Protein-rich Meal</div>
                   <EnergyDiagram energyInput={inputEnergyProtein} currentEnergy={currentEnergyProtein}
                     running={runningProtein} display={runningProtein || hasRunProteinSimulation}
-                    currentHunger={currentHungerProtein} />
+                    currentHunger={currentHungerProtein} finalEnergyUsePercent={END_PROTEIN_ENERGY_PERCENT} />
                 </div>
               </div>
               <div className="energy-diagram-key">
@@ -130,7 +130,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
   private runCarbSimulation = () => {
     const { runningCarb, runningProtein } = this.state;
     // carb energy usage like a log curve
-    const energyFunc = (x: number) => (0.6 * Math.log10((10 * x) + 1));
+    const energyFunc = (x: number) => (0.83 * Math.log10((10 * x) + 1));
     const hungerFunc = (x: number) => (1 - Math.cos(x));
     const timeMax = Math.PI / 2;
     if (!runningCarb && !runningProtein) {
