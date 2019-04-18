@@ -27,7 +27,7 @@ export class EnergyDiagram extends BaseComponent<IProps, IState> {
     const barHeight = inputHeight;
     // TODO: figure out "hunger"
     const heightHunger = currentHunger > 0 ?  (1 - (currentHunger / energyInput)) * barHeight : 0;
-    const heightExpendedEnergy = energyInput > 0 ? (1 - (currentEnergy / energyInput)) * barHeight: 0;
+    const heightExpendedEnergy = energyInput > 0 ? (1 - (currentEnergy / energyInput)) * barHeight : 0;
     // console.log(energyInput, currentEnergy, inputHeight, heightHunger, heightExpendedEnergy);
 
     const inputStyle = { height: inputHeight };
