@@ -29,7 +29,8 @@ export class EnergyDiagram extends BaseComponent<IProps, IState> {
     const barHeight = inputHeight;
     // TODO: figure out "hunger"
     const heightHunger = currentHunger > 0 ?  (1 - (currentHunger / energyInput)) * maxExpendedEnergyHeight : 0;
-    const heightExpendedEnergy = energyInput > 0 ? (1 - (currentEnergy / energyInput)) * maxExpendedEnergyHeight : 0;
+    const heightExpendedEnergy = energyInput > 0 && currentEnergy > 0 ?
+      (1 - (currentEnergy / energyInput)) * maxExpendedEnergyHeight : 0;
     // console.log(energyInput, currentEnergy, inputHeight, heightHunger, heightExpendedEnergy);
 
     const inputStyle = { height: inputHeight };
@@ -40,7 +41,7 @@ export class EnergyDiagram extends BaseComponent<IProps, IState> {
     const containerClass = "energy-diagram-container" + (display ? "" : " inactive");
     return (
       <div className={containerClass}>
-        <div className="energy-bar-input" data-tip="Calories Consumed" style={inputStyle} />
+        {energyInput >= 0 && <div className="energy-bar-input" data-tip="Calories Consumed" style={inputStyle} />}
         <div className="energy-bar-hunger" data-tip="Level of Hunger" style={currentStyleHunger} />
         <div className="energy-bar-expended" data-tip="Energy Used" style={currentStyleExpended} />
         <div className={placeholderClass} />

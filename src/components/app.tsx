@@ -35,6 +35,8 @@ interface IState {
   runningProtein: boolean;
   hasRunCarbSimulation: boolean;
   hasRunProteinSimulation: boolean;
+  simulationRunning: boolean;
+  displayText: string;
 }
 
 @inject("stores")
@@ -53,7 +55,9 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       runningCarb: false,
       runningProtein: false,
       hasRunCarbSimulation: false,
-      hasRunProteinSimulation: false
+      hasRunProteinSimulation: false,
+      simulationRunning: false,
+      displayText: ""
     };
   }
 
@@ -67,24 +71,64 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       currentHungerProtein,
       runningCarb,
       runningProtein,
-      hasRunCarbSimulation,
-      hasRunProteinSimulation } = this.state;
+      displayText
+    } = this.state;
     const carbButtonClass = "run-simulation-button carb" +
       (runningCarb ? " running" : runningProtein ? " inactive" : "");
     const proteinButtonClass = "run-simulation-button protein" +
       (runningProtein ? " running" : runningCarb ? " inactive" : "");
+
+    const startProteinSimulation = () => {
+      if (!this.state.simulationRunning) {
+        this.setState({displayText: ""});
+        if (inputEnergyProtein > 0) {
+          // Restarting simulation, set back to 0, remove input bar completely
+          this.setState({ inputEnergyProtein: -1, currentEnergyProtein: 0, currentHungerProtein: 0 });
+          setTimeout(() => {
+            // input bar returns, 0 height
+            this.setState({ inputEnergyProtein: 0 });
+            setTimeout(() => {
+              // input bar will animate to input energy level as part of simulation
+              this.runProteinSimulation();
+            }, 200);
+          }, 200);
+        } else {
+          this.runProteinSimulation();
+        }
+      }
+    };
+    const startCarbSimulation = () => {
+      if (!this.state.simulationRunning) {
+        this.setState({ displayText: "" });
+        if (inputEnergyCarb > 0) {
+          // Restarting simulation, set back to 0, remove input bar completely
+          this.setState({ inputEnergyCarb: -1, currentEnergyCarb: 0, currentHungerCarb: 0 });
+          setTimeout(() => {
+            // input bar returns, 0 height
+            this.setState({ inputEnergyCarb: 0 });
+            setTimeout(() => {
+              // input bar will animate to input energy level as part of simulation
+              this.runCarbSimulation();
+            }, 200);
+          }, 200);
+        } else {
+          this.runCarbSimulation();
+        }
+      }
+    };
     return (
       <div className="app-container">
         <div className="controls-and-content-container">
           <div className="main-content">
             <div className="section simulation">
-              <DanceSimulation dance={runningCarb ? "carb" : runningProtein ? "protein" : ""} />
+              <DanceSimulation dance={runningCarb ? "carb" : runningProtein ? "protein" : ""}
+                displayText={displayText} />
               <div className="simulation-controls">
-                <div className={proteinButtonClass} onClick={this.runProteinSimulation}>
+                <div className={proteinButtonClass} onClick={startProteinSimulation}>
                   <div className="simulation-button-text">Protein-rich Meal</div>
                   <div className="simulation-button-icon protein" />
                 </div>
-                <div className={carbButtonClass} onClick={this.runCarbSimulation}>
+                <div className={carbButtonClass} onClick={startCarbSimulation}>
                   <div className="simulation-button-text">Carbohydrate-rich Meal</div>
                   <div className="simulation-button-icon carb" />
                 </div>
@@ -96,13 +140,13 @@ export class AppComponent extends BaseComponent<IProps, IState> {
                 <div className="energy-diagram protein">
                   <div>Protein-rich Meal</div>
                   <EnergyDiagram energyInput={inputEnergyProtein} currentEnergy={currentEnergyProtein}
-                    running={runningProtein} display={runningProtein || hasRunProteinSimulation}
+                    running={runningProtein} display={inputEnergyProtein > 0}
                     currentHunger={currentHungerProtein} finalEnergyUsePercent={END_PROTEIN_ENERGY_PERCENT} />
                 </div>
                 <div className="energy-diagram carb">
                   <div>Carbohydrate-rich Meal</div>
                   <EnergyDiagram energyInput={inputEnergyCarb} currentEnergy={currentEnergyCarb}
-                    running={runningCarb} display={runningCarb || hasRunCarbSimulation}
+                    running={runningCarb} display={inputEnergyCarb > 0}
                     currentHunger={currentHungerCarb} finalEnergyUsePercent={END_CARB_ENERGY_PERCENT} />
                 </div>
               </div>
@@ -128,62 +172,101 @@ export class AppComponent extends BaseComponent<IProps, IState> {
   }
 
   private runCarbSimulation = () => {
-    const { runningCarb, runningProtein } = this.state;
+    const { simulationRunning } = this.state;
     // carb energy usage like a log curve
-    const energyFunc = (x: number) => (0.83 * Math.log10((10 * x) + 1));
+    const energyFunc = (x: number) => (0.83 * Math.log10((9 * x) + 1));
     const hungerFunc = (x: number) => (1 - Math.cos(x));
     const timeMax = Math.PI / 2;
-    if (!runningCarb && !runningProtein) {
+    if (!simulationRunning) {
       this.setState({
-        runningCarb: true,
         inputEnergyCarb: START_CARB_ENERGY,
-        currentEnergyCarb: START_CARB_ENERGY
+        simulationRunning: true
       });
-      this.runSimulation((danceComplete: number) => {
-        const currentEnergy =
+      this.runSimulation(
+        () => {
+          // Start simulation callback
+          this.setState({
+            runningCarb: true,
+            currentEnergyCarb: START_CARB_ENERGY
+          });
+        },
+        (danceComplete: number) => {
+          // Update simulation callback
+          const currentEnergy =
           START_CARB_ENERGY - (START_CARB_ENERGY * energyFunc(danceComplete * timeMax));
-        const currentHunger = START_CARB_ENERGY - (START_CARB_ENERGY * hungerFunc(danceComplete * timeMax));
-        this.setState({ currentEnergyCarb: currentEnergy, currentHungerCarb: currentHunger });
-      }, () => {
-        this.setState({ runningCarb: false, hasRunCarbSimulation: true });
+          const currentHunger = START_CARB_ENERGY - (START_CARB_ENERGY * hungerFunc(danceComplete * timeMax));
+          this.setState({
+            currentEnergyCarb: currentEnergy,
+            currentHungerCarb: currentHunger
+          });
+        },
+        () => {
+          // finish simulation callback
+          this.setState({
+            runningCarb: false,
+            hasRunCarbSimulation: true,
+            simulationRunning: false,
+            displayText: "Anika is hungry"});
       });
     }
   }
 
   private runProteinSimulation = () => {
-    const { runningCarb, runningProtein, hasRunCarbSimulation } = this.state;
+    const { simulationRunning } = this.state;
     // protein energy use like a sine curve from 0 to pi/2
     const energyFunc = (x: number) => (Math.sin(x));
     const hungerFunc = (x: number) => (1 - Math.cos(4 * x / 5));
     const timeMax = Math.PI / 2;
-    if (!runningCarb && !runningProtein) {
+    if (!simulationRunning) {
+      // Set initial energy first, wait two seconds, then start animation
       this.setState({
-        runningProtein: true,
         inputEnergyProtein: START_PROTEIN_ENERGY,
-        currentEnergyProtein: START_PROTEIN_ENERGY
+        simulationRunning: true
       });
-      this.runSimulation((danceComplete: number) => {
-        const currentEnergy =
-          START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * energyFunc(danceComplete * timeMax));
-        const currentHunger = START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * hungerFunc(danceComplete * timeMax));
-        this.setState({ currentEnergyProtein: currentEnergy, currentHungerProtein: currentHunger });
-      }, () => {
-        this.setState({ runningProtein: false, hasRunProteinSimulation: true });
-      });
+      this.runSimulation(
+        () => {
+          // Start simulation callback
+          this.setState({
+            runningProtein: true,
+            currentEnergyProtein: START_PROTEIN_ENERGY
+          });
+        },
+        (danceComplete: number) => {
+          // Update simulation callback
+          const currentEnergy =
+            START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * energyFunc(danceComplete * timeMax));
+          const currentHunger = START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * hungerFunc(danceComplete * timeMax));
+          this.setState({
+            currentEnergyProtein: currentEnergy,
+            currentHungerProtein: currentHunger
+          });
+        },
+        () => {
+          // Finish simulation callback
+          this.setState({
+            runningProtein: false,
+            hasRunProteinSimulation: true,
+            simulationRunning: false,
+            displayText: "Anika is tired"
+          });
+        }
+      );
     }
   }
 
-  private runSimulation = (updateSimulation: any, finishSimulation: any) => {
+  private runSimulation = (startSimulation: any, updateSimulation: any, finishSimulation: any) => {
     let nextTime = 0;
-    DANCE_INTERVAL = setInterval(() => {
-      const danceComplete = nextTime / TIMER_DURATION;
-      updateSimulation(danceComplete);
-      nextTime++;
-      if (nextTime >= TIMER_DURATION) {
-        clearInterval(DANCE_INTERVAL);
-        finishSimulation();
-      }
-    }, 100);
+    setTimeout(() => {
+      startSimulation();
+      DANCE_INTERVAL = setInterval(() => {
+        const danceComplete = nextTime / TIMER_DURATION;
+        updateSimulation(danceComplete);
+        nextTime++;
+        if (nextTime >= TIMER_DURATION) {
+          clearInterval(DANCE_INTERVAL);
+          finishSimulation();
+        }
+      }, 100);
+    }, 2000);
   }
-
 }

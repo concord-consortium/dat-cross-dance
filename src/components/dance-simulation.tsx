@@ -5,6 +5,7 @@ import "./dance-simulation.sass";
 
 interface IProps extends IBaseProps {
   dance: string;
+  displayText: string;
 }
 interface IState {
   isPlaying: boolean;
@@ -30,7 +31,7 @@ export class DanceSimulation extends BaseComponent<IProps, IState> {
     }
   }
   public render() {
-    const { dance } = this.props;
+    const { dance, displayText } = this.props;
     const simulationPlaceholderClass = "simulation-placeholder " + (dance ? dance : "");
     const isPlaying = dance && dance.length > 0;
     const videoUrl = dance === "carb" ? "./assets/anika-hungry.mp4" :
@@ -42,6 +43,7 @@ export class DanceSimulation extends BaseComponent<IProps, IState> {
             loop={false} playsInline={true}>
             <source src={videoUrl} type="video/mp4" />
           </video>
+          {displayText.length > 0 && <div className="simulation-text">{displayText}</div>}
         </div>
       </div>
     );
