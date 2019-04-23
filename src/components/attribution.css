@@ -8,13 +8,13 @@
 
 .attribution .attribution-logo{
   background: url('../assets/cclogo.png');
-  background-size: 130px 55px;
+  background-size: contain;
   background-repeat: no-repeat;
   position: absolute;
-  top: 430px;
-  left: 660px;
-  width:130px;
-  height:55px;
+  top: 360px;
+  left: 710px;
+  width: 90px;
+  height: 40px;
 }
 
 .attribution-container-hidden{
