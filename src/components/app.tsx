@@ -206,7 +206,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
             runningCarb: false,
             hasRunCarbSimulation: true,
             simulationRunning: false,
-            displayText: "Anika is hungry"});
+            displayText: "Anika is hungry."});
       });
     }
   }
@@ -247,7 +247,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
             runningProtein: false,
             hasRunProteinSimulation: true,
             simulationRunning: false,
-            displayText: "Anika is tired"
+            displayText: "Anika is tired."
           });
         }
       );
