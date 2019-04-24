@@ -6,6 +6,7 @@ import "./dance-simulation.sass";
 interface IProps extends IBaseProps {
   dance: string;
   displayText: string;
+  displayPlaceholder: string;
 }
 interface IState {
   isPlaying: boolean;
@@ -19,29 +20,40 @@ export class DanceSimulation extends BaseComponent<IProps, IState> {
   public componentDidUpdate() {
     const { dance } = this.props;
     if (!this.state.isPlaying && dance && dance.length > 0) {
-      const video: HTMLVideoElement = document.getElementsByTagName("video")[0];
-      const videoUrl = dance === "carb" ? "./assets/anika-hungry.mp4" :
-        dance === "protein" ? "./assets/anika-tired.mp4" : "";
-      video.src = videoUrl;
-      video.play();
-
+      const videoProtein: HTMLVideoElement = document.getElementById("videoProtein") as HTMLVideoElement;
+      const videoCarb: HTMLVideoElement = document.getElementById("videoCarb") as HTMLVideoElement
+        || document.getElementsByTagName("video")[1];
+      if (dance === "carb") {
+        videoCarb.play();
+      } else if (dance === "protein") {
+        videoProtein.play();
+      }
       this.setState({ isPlaying: true });
     } else if (this.state.isPlaying && (!this.props.dance || this.props.dance.length === 0)){
       this.setState({ isPlaying: false });
     }
   }
   public render() {
-    const { dance, displayText } = this.props;
-    const simulationPlaceholderClass = "simulation-placeholder " + (dance ? dance : "");
-    const isPlaying = dance && dance.length > 0;
-    const videoUrl = dance === "carb" ? "./assets/anika-hungry.mp4" :
-      dance === "protein" ? "./assets/anika-tired.mp4" : "";
+    const { dance, displayText, displayPlaceholder } = this.props;
+    const simulationPlaceholderClass = "simulation-placeholder " +
+      (displayPlaceholder ? displayPlaceholder : "");
+    const videoProteinStyle = dance === "protein" || displayPlaceholder === "tired" ? {} : { zIndex: -1 };
+    const videoCarbStyle = dance === "carb" || displayPlaceholder === "hungry" ? {} : { zIndex: -1 };
+
     return (
       <div className="simulation-container">
         <div className={simulationPlaceholderClass}>
-          <video id="video1" poster="./assets/dance_placeholder.png"
-            loop={false} playsInline={true}>
-            <source src={videoUrl} type="video/mp4" />
+          <video id="videoProtein" poster="./assets/dance_placeholder.png"
+            loop={false} playsInline={true} preload="auto"
+            style={videoProteinStyle}
+          >
+            <source src="./assets/anika-tired.mp4" type="video/mp4" />
+          </video>
+          <video id="videoCarb" poster="./assets/dance_placeholder.png"
+            loop={false} playsInline={true} preload="auto"
+            style={videoCarbStyle}
+          >
+            <source src="./assets/anika-hungry.mp4" type="video/mp4" />
           </video>
           {displayText.length > 0 && <div className="simulation-text">{displayText}</div>}
         </div>

@@ -37,6 +37,7 @@ interface IState {
   hasRunProteinSimulation: boolean;
   simulationRunning: boolean;
   displayText: string;
+  displayPlaceholder: string;
 }
 
 @inject("stores")
@@ -57,7 +58,8 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       hasRunCarbSimulation: false,
       hasRunProteinSimulation: false,
       simulationRunning: false,
-      displayText: ""
+      displayText: "",
+      displayPlaceholder: ""
     };
   }
 
@@ -71,7 +73,8 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       currentHungerProtein,
       runningCarb,
       runningProtein,
-      displayText
+      displayText,
+      displayPlaceholder
     } = this.state;
     const carbButtonClass = "run-simulation-button carb" +
       (runningCarb ? " running" : runningProtein ? " inactive" : "");
@@ -122,7 +125,7 @@ export class AppComponent extends BaseComponent<IProps, IState> {
           <div className="main-content">
             <div className="section simulation">
               <DanceSimulation dance={runningCarb ? "carb" : runningProtein ? "protein" : ""}
-                displayText={displayText} />
+                displayText={displayText} displayPlaceholder={displayPlaceholder} />
               <div className="simulation-controls">
                 <div className={proteinButtonClass} onClick={startProteinSimulation}>
                   <div className="simulation-button-text">Protein-rich Meal</div>
@@ -206,7 +209,9 @@ export class AppComponent extends BaseComponent<IProps, IState> {
             runningCarb: false,
             hasRunCarbSimulation: true,
             simulationRunning: false,
-            displayText: "Anika is hungry."});
+            displayText: "Anika is hungry.",
+            displayPlaceholder: "hungry"
+          });
       });
     }
   }
@@ -247,7 +252,8 @@ export class AppComponent extends BaseComponent<IProps, IState> {
             runningProtein: false,
             hasRunProteinSimulation: true,
             simulationRunning: false,
-            displayText: "Anika is tired."
+            displayText: "Anika is tired.",
+            displayPlaceholder: "tired"
           });
         }
       );

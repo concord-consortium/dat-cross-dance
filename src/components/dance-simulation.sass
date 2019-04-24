@@ -7,9 +7,15 @@
     border: 1px solid silver
     box-sizing: border-box
     background-image: url("../assets/dance_placeholder.png")
+    background-size: contain
+    &.tired
+      background-image: url("../assets/dance_tired.png")
+    &.hungry
+      background-image: url("../assets/dance_hungry.png")
 
     video
       width: 100%
+      position: absolute
 
     .simulation-text
       position: absolute
