@@ -183,7 +183,9 @@ export class AppComponent extends BaseComponent<IProps, IState> {
     if (!simulationRunning) {
       this.setState({
         inputEnergyCarb: START_CARB_ENERGY,
-        simulationRunning: true
+        simulationRunning: true,
+        displayText: "",
+        displayPlaceholder: ""
       });
       this.runSimulation(
         () => {
@@ -226,7 +228,9 @@ export class AppComponent extends BaseComponent<IProps, IState> {
       // Set initial energy first, wait two seconds, then start animation
       this.setState({
         inputEnergyProtein: START_PROTEIN_ENERGY,
-        simulationRunning: true
+        simulationRunning: true,
+        displayText: "",
+        displayPlaceholder: ""
       });
       this.runSimulation(
         () => {
@@ -238,12 +242,14 @@ export class AppComponent extends BaseComponent<IProps, IState> {
         },
         (danceComplete: number) => {
           // Update simulation callback
+
           const currentEnergy =
             START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * energyFunc(danceComplete * timeMax));
           const currentHunger = START_PROTEIN_ENERGY - (START_PROTEIN_ENERGY * hungerFunc(danceComplete * timeMax));
           this.setState({
             currentEnergyProtein: currentEnergy,
-            currentHungerProtein: currentHunger
+            currentHungerProtein: currentHunger,
+            currentTime: danceComplete
           });
         },
         () => {
@@ -261,12 +267,14 @@ export class AppComponent extends BaseComponent<IProps, IState> {
   }
 
   private runSimulation = (startSimulation: any, updateSimulation: any, finishSimulation: any) => {
-    let nextTime = 0;
+    let nextTime = -10;
     setTimeout(() => {
       startSimulation();
       DANCE_INTERVAL = setInterval(() => {
         const danceComplete = nextTime / TIMER_DURATION;
-        updateSimulation(danceComplete);
+        if (nextTime >= 0) {
+          updateSimulation(danceComplete);
+        }
         nextTime++;
         if (nextTime >= TIMER_DURATION) {
           clearInterval(DANCE_INTERVAL);
